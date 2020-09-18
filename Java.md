@@ -6,6 +6,14 @@ Questo lavoro è rilasciato sotto licenza **Creative Commons Attribution-NonComm
 
 ![licenza](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)
 
+## Prefazione
+
+Questo manuale vuole essere di aiuto a me per ripassare in vista del tirocinio e per gli studenti di *Programmazione ad Oggetti* del PoliTo come eventuale riferimento in fase di preparazione dell'esame.
+
+Buon lavoro a tutti,
+
+Francesco Clemente
+
 ## Java Environment
 
 Java mette a disposizione construtti OO: definizione di classi in modo gerarchico, creazione/distruzione dinamica, scambio di messaggi.
@@ -339,3 +347,177 @@ Ci sono 4 tipi di classi annidate:
   ​	Il reference alla variabile `j` viene sostituito con il valore corrente.
 
 - Anonymous inner class: classi locali senza nome; ottenibili solo attraverso l'ereditarietà (implementa una interfaccia o estende una classe).
+
+## Ereditarietà
+
+Con ereditarietà si intende la possibilità di una classe di essere "sotto-tipo" di un altra; la classe derivata conterrà tutti i membri della classe superiore più quello che essa definirà. La classe "figlia" avrà inoltre la possibilità di fare **override** della definizione dei metodi esistendi proponendone una sua versione.
+
+```java
+// Persona.java
+class Persona{
+	private String nome, cognome;
+	private int annoNascita;
+  public Persona(String nome, String cognome, int anno);
+  public int getAnnoNascita(){
+    return annoNascita;
+  }
+}
+// Lavoratore.java
+class Lavoratore extends Persona{
+  private String impiego;
+  private int annoInizioLavoro;
+  public Lavoratore(String nome, String cognome,
+                   int annoNascita, int annoInizLavoro){
+    super(nome,cognome,annoNascita);
+    this.annoInizioLavoro=annoInizLavoro;
+  }
+  public int getAnnoInizioLavoro(){..}
+}
+// Main
+Lavoratore l = new Lavoratore("Mario","Rossi",1970,1989);
+System.out.println(l.getAnnoNascita());
+```
+
+Si parla di polimorfismo quando si fa una cosa del tipo:
+
+```java
+Persona p = new Lavoratore(..);
+// ciò è corretto perchè un lavoratore è una persona
+```
+
+L'ereditarietà è una tecnica estremamente funzionale nel caso del riuso: ereditando del codice minimizza le ripetizioni di codice e permette di fare le modifiche in un solo punto e propagarle nelle sottoclassi.
+
+È possibile sviluppare l'ereditarietà su più livelli e rappresentare la struttura tramite albero di ereditarietà; è importante non crearne troppi per evitare confusione.
+
+Il casting è possibile anche nel caso delle classi.
+
+```java
+Persona p = new Persona(..);
+Lavoratore l = new Lavoratore(..);
+Persona pl = l;
+```
+
+In tal caso si parla di **upcast** ed è sempre ammesso; ciò permette di trattare oggetti di classi differenti in funzione del fatto che sono figli di una classe comune. Il casting non modifica la struttura interna di un oggetto, per cui se un oggetto è di una data classe, resterà di quella classe anche se ci riferiamo a lui facendogli riferimento come se fosse del tipo di un suo antenato.
+
+Il **downcast** ovvero l'assegnazione di un tipo più generico (e.g. `Persona`) ad uno più specifico (e.g. `Lavoratore`) non è sempre possibile e non è automatico, deve essere fatto *esplicitamente*. Qualora si facesse una operazione illegale, questa viene rilevata a *runtime* e viene lanciata una *eccezione* (ne parleremo più avanti).
+
+È possibile usare l'operatore `instanceof` per avere informazioni su un reference, ovvero sapere se è di una data classe:
+
+```java
+if (persone[i] instanceof Lavoratore){
+  lav = (Lavoratore) persone[i];
+}
+```
+
+### Polimorfismo e Dynamic Binding
+
+Un riferimento di un tipo A, può puntare ad un oggetto di tipo B se e solo se B coincide con T o B è una sottoclasse di A.
+
+Il compilatore effettua un controllo sull'invocazione di un metodo in funzione del tipo di riferimento.
+
+Si parla di **Dynamic Binding** il processo con cui si effettua una scelta tra metodi per cui è stato fatto l'override. In particolare se si sta invocando un metodo per cui è stato fatto l'override nel caso di un oggetto che in quel momento è stato referenziato a mezzo di una classe antenata, viene comunque chiamato il metodo della classe figlia.
+
+Ciò permette, nel caso di più figli che hanno fatto override distinti di un metodo di un genitore, di essere trattati in modo uniforme se presi "tutti insieme", ma di gestire le cose in modo "personalizzato".
+
+La parola chiave `super` permette di far riferimento alla classe padre e quindi accedere ai suoi attributi, metodi e costruttori a patto che non siano privati.
+
+Per identificare un attributo, metodo o costruttore privato ma visibile alle classi derivate, si usa il modificatore `protected`.
+
+### Classe `Object`
+
+`java.lang.Object` è la classe di cui tutte le altri sono figlie. Ogni classe è direttamente o indirettamente una sottoclasse di `Object`, per cui qualsiasi oggetto può essere visto come una istanza di Object.
+
+La classe `Object` mette a disposizione dei servizi utili per le altre classi (e.g. i metodi `toString()` ed `equals(Object)`, `hashCode()`, `clone()`); di questi spesso è fatto l'override.
+
+Si può dire che i reference di tipo `Object` siano analoghi ai `*void` del C.
+
+### Classi astratte
+
+Spesso una superclasse è utilizzata solo per definire un comportamento comune per delle classi figlie, ma alcuni metodi potrebbero non avere implementazioni ovvie nella superclasse. Le classi astratte permettono di lasciare il comportamento parzialmente definito, cosa che però le rende non istanziabili.
+
+Una classe astratta deve essere definita con il modificatore `abstract` ed a sua volta ogni metodo incompleto deve avere lo stesso modificatore.
+
+### Interfacce
+
+Le interfacce sono uno speciale tipo di classe dove i metodi sono implicitamente `abstract`, gli attributi implicitamente `static` e `final`e tutti i membri implicitamente `public`.
+
+Viene definita con la parola chiave `interface` invece che con `class`.
+
+Una classe `implements` una interfaccia. Una classe può implementare più interfacce ma può estendere solo una classe.
+
+Quando si implementa una interfaccia, tutti i suoi metodi devono essere implementati a meno che la classe non sia astratta.
+
+Una interfaccia può estendere un'altra o più interfacce.
+
+Spesso le interfacce si utilizzano per definire classi anonime, ovvero classi definite inline implementando i metodi:
+
+```java
+Iface obj = new Iface(){
+	public void method(){..}
+}
+```
+
+Un esempio di interfaccia è `java.lang.Comparable` che mette a disposizione il metodo `compareTo(Object)` che permette di effettuare il contrfonto tra due oggetti e definire un ordine.
+
+Similmente si comporta `java.util.Comparator` con il metodo `compare (Object, Object)`.
+
+Un'altra interfaccia comune, citata precedentemente è `java.lang.Iterable` che permette di essere utilizzata all'interno di un `foreach`. Al suo interno definisce un metodo `iterator()` che restituisce un oggetto di tipo `java.util.Iterator` il quale possiede due metodi `hasNext()` e `next()` i quali rispettivamente restituiscono un `boolean` ed un `Object`.
+
+### Metodi `default`
+
+Una implementazione per i metodi delle interfacce può essere fornita nel caso in cui siano definiti con modificatore `default` i quali: non possono far riferimento ad attributi non-statici, possono referenziare argomenti o altri metodi, possono essere *overridden*.
+
+Sono utilizzati per aggiungere funzionalità ad interfacce già esistenti senza "rompere" le classi che implementano.
+
+### Intefacce funzionali
+
+Interfaccia che contiene un solo metodo: gli `static` e `default` non contano.
+
+La semantica è funzionale: il risultato del metodo è basato sui soli argomenti.
+
+Sono definite in `java.util.function`
+
+### Anonymous Inner class e Lambda
+
+Sono una implementazione *inline* di interfacce contenenti un solo metodo.
+
+```java
+// Stampante.java
+public interface Stampante{
+	public void handle(Object o);
+}
+// Main
+Stampante s = new Stampante(){
+  public void handle(Object o){
+    System.out.println(o);
+  }
+}
+```
+
+Una funzione Lambda è una definizione di una anonymous inner class "al volo". Equivalentemente al codice di prima, si può scrivere:
+
+```java
+Stampante s = o -> System.out.println(o);
+```
+
+Le lambda hanno la seguente sintassi:
+
+- Parametri
+  - Nessuno: `()`
+  - Uno: `x`
+  - Due o più: `(x, y)`
+  - I tipi possono essere omessi
+- Corpo:
+  - Espressione: `x + y`
+  - Blocco di codice: `{return x+y;}`
+
+I tipi sono generalmente omessi in quanto il compilatore assegna automaticamente il tipo corretto in funzione del contesto.
+
+Un **method reference** è una rappresentazione compatta di una istanza di una interfaccia funzionale che invoca un singolo metodo.
+
+```java
+Consumer stampante;
+stampante = System.out::println;
+stampante.consume("Hello!");
+```
+
