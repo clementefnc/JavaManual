@@ -521,3 +521,78 @@ stampante = System.out::println;
 stampante.consume("Hello!");
 ```
 
+## Generics
+
+Spesso la stessa operazione deve essere effettuata su oggetti di classi scorrelate; la soluzione tipica sarebbe usare reference di tipo Object ma questo richiede troppi cast espliciti, i controlli del compilatore sono limitati ecc. La soluzione è utilizzare i cosiddetti Generics.
+
+```java
+// Coppia.class
+public class Coppia<T> {
+	T a,b;
+	public Coppia(T a, T b){
+		thia.a = a;
+		this.b = b;
+	}
+	public T primo(){ return a; }
+	public T secondo(){ return b; }
+}
+
+// Main
+Coppia<String> sc = new Coppia<>("Uno","Due");
+Coppia<Integer> ic = new Coppia<>(1,2);
+String a = sc.secondo();
+Integer b = ic.primo();
+```
+
+Sintassi: *`(class|interface) Name <P1 {, P2}>`*
+
+Dove i tipi nei parametri possono essere classi o interfacce e convenzionalmente indicati con lettere maiuscole secondo la convenzione **T**(ype), **E**(lement), **K**(ey), **V**(alue).
+
+L'interfaccia `java.lang.Comparable` ad esempio è definita come Generic, ma anche `Iterable` ed `Iterator`.
+
+Le parentesi angolate prendono il nome di **diamond operator**.
+
+Nel caso dei metodi la sintassi è la seguente: *`modifiers <T> type name(pars)`*
+
+I tipi dei parametri usati nei generigs sono *unbounded* per default: non ci sono obblighi circa il tipo che deve essere sostituito al tipo dei parametri. L'assunzione più sicura e che quel tipo sia una estensione di `Object`.
+
+Nel caso in cui si voglia specificare che il tipo di un parametro debba essere ristretto ad una specifica "famiglia" di tipi, questo è possibile mediante l'ereditarietà è la sintassi `<T extends B { & C}`. Dove La classe T può essere soltanto di un tipo che estende B (e C) inclusa B stessa.
+
+```java
+// Esempio: generico ordinamento
+public static <T extends Comprable> void sort (T v[]){
+  for(int i=1; i<v.length; i++)
+    for(int j=1; j<v.length; j++)
+      if(v[j-1].compareTo(v[j]) > 0){
+        T o = v[j];
+        v[j] = v[j-1];
+        v[j-1] = o;
+      }
+}
+
+// Ma visto che Comparable è una interfaccia generica
+public static <T extends Comprable<T>> void sort (T v[]){..}
+```
+
+Bisogna stare però attenti all'ereditarietà quando si usano i Generics: se B estende A, X\<B> non necessariamente estende X\<A>.
+
+I contenitori possono essere co-varianti o invarianti: nel primo caso l'ereditarietà implica ereditarietà dei contenitori; nel secondo no.
+
+É possibile esprimere (la mancanza di) vincoli quando si usano i generics attraversò le *wildcards*:
+
+- `<?>` indica nessun vincolo
+- `<? extends B>` indica che sono ammessi sono i discendenti di B, B incluso
+- `<? super D>` indica che sono ammessi solo gli antenati di D, D incluso
+
+`?` è il tipo sconosciuto ed è trattato come tale, per cui il compilatore lo tratta nel modo più sicuro, ovvero come se fosse un `Object` e non gli si possono fare assegnazioni.
+
+## Collections
+
+## Eccezioni
+
+## Stream
+
+## Input/Output
+
+## Threads
+
