@@ -622,6 +622,68 @@ Ha come implementazioni `HashMap`, `TreeMap`, `LinkedHashMap`.
 
 ## Eccezioni
 
+Le eccezioni sono un meccanismo utilizzato per segnalare e gestire eventuali errori che si possono verificare a runtime.
+
+Spesso una funzione non può gestire un errore, ma la cosa potrebbe essere invece gestita dal chiamante.
+
+Il processo di gestione delle eccezioni prevede di localizzare il punto dove si potrebbe verificare un errore, isolarlo e definire una strategia per la sua gestione.
+
+Se un errore non è gestibile, l'unica soluzione è terminare l'esecuzione del programma attraverso chiamata a `System.exit()`
+
+Una modalità di segnalazione dell'errore è il ritorno di un valore specifico che si discosta del tutto dal normale valore di ritorno. Ciò però non è sempre possibile e lascia solo al chiamante la possibilità di gestire l'errore.
+
+Con le eccezioni la gestione consta nel definire un blocco di codice che si occupa di gestire le eccezioni. In tal caso le eccezioni possono essere ignorate (delegate) oppure intercettate e gestite.
+
+Java mette a disposizione tre keyword: `throw` per generare l'eccezione, `try` che introduce il codice da controllare in quanto potrebbe generare l'eccezione, `catch` definisce il codice di gestione dell'eccezione.
+
+Necessitiamo di un nuovo tipo di oggetto: la classe `Throwable`.
+
+Per generare una eccezione bisogna: identificare/definire una classe di eccezione, dichiarare i metodi potenziali fonti di eccezioni, creare uno oggetto eccezione, lanciare al livello superiore una eccezione.
+
+```java
+// EmptyStack.class
+public class EmptyStack extends Exception{}
+
+// Stack.class
+class Stack<E>{
+  public E pop() throws EmptyStack{
+    if(size == 0){
+      Exception e = new EmptyStack();
+      throw e;
+    }
+    ...
+  }
+}
+```
+
+ La firma del metodo deve dichiarare il tipo (o i tipi) di eccezioni generabili nel suo corpo. All'interno del metodo l'eccezione può essere gestita oppure rimandata ai livelli superiori (`throw`).
+
+Nel caso di rimando ai livelli superiori, l'esecuzione del metodo è interrotta istantaneamente ed inizia la fase di catch.
+
+La gestione delle eccezioni avviene in una porzione di codice all'interno di un blocco `try`.
+
+```java
+try{
+	stack.pop();	//qui si potrebbe generare una eccezione	
+	...
+}
+catch (StackEmpty e){
+	System.out.println(e); //nel caso in cui si verificasse
+}
+```
+
+Quando un blocco di codice presenta la possibilità del verificarsi di una eccezione, l'eccezione deve essere controllata. Si può gestire, propagare, gestire e rilanciare.
+
+La propagazione/rilancio, può arrivare al più alla JVM, caso in cui il programma viene terminato.
+
+Spesso per definire eccezioni è più comodo estendere `Exception` di `Throwable`.
+
+Al blocco `try-catch` è possibile farne seguire un ultimo `finally` che definisce un qualcosa che deve essere eseguito in ogni caso.
+
+È possibile inoltre definire più blocchi `catch` nel caso in cui ci fosse la possibilità che si possano generare più tipologie di eccezioni distinte.
+
+Se ci sono più gestori che possono gestire una eccezione (nel caso di eccezioni in gerarchia) viene eseguito quello più specifico.
+
 ## Stream
 
 ## Input/Output
