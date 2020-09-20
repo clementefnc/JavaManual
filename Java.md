@@ -588,6 +588,38 @@ I contenitori possono essere co-varianti o invarianti: nel primo caso l'ereditar
 
 ## Collections
 
+Con `Collections si intende le collezioni di dati come ad esempio gli insiemi (interfaccia `Set<E>`), le code (interfaccia `Queue<E>`), le liste (interfaccia `List<E>`) o i dizionari (interfaccia `Map<K,V>`).
+
+Sono definite in `java.util`, implementano `Iterable`.
+
+Posseggono metodi per valutarne dimensione, presenza di un elemento o di più elementi, aggiungere elemento/i, rimuovere elemento/i, svuotare.
+
+**N.B.** è poco sicuro iterare su una collezione su cui si stanno effettuando operazioni di inserzione/rimozione a meno che non si utilizzino i metodi dell'iteratore.
+
+### `List`
+
+Può contenere elementi duplicati, è mantenuto l'ordine di inserzione, gli elementi sono indirizzabili in funzione della loro posizione.
+
+Ha come implementazioni `ArrayList` e `LinkedList`.
+
+### `Queue`
+
+Collezioni di elementi secondo un ordine specifico definito dall'ordine di arrifo o da una priorità.
+
+Ha come implementazioni `LinkedList` e `PriorityQueue`.
+
+### `Set`
+
+Non ha metodi propri se non quelli ereditati da `Collection`. Non sono ammessi elementi duplicati.
+
+Ha come implementazioni `HashSet`, `LinkedHashSet`, `TreeSet`
+
+### Mappe
+
+Una mappa è un contenitore he associa chiavi a valori. Chiavi e valori devono essere oggetti; le chiavi devono essere univoche per ogni valore.
+
+Ha come implementazioni `HashMap`, `TreeMap`, `LinkedHashMap`.
+
 ## Eccezioni
 
 ## Stream
