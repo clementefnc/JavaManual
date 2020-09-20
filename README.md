@@ -1,6 +1,6 @@
 # Java Manual
 
-Un mio personalissimo manuale di Java, quick reference nei momenti bui.
+Un mio personalissimo manuale di Java, quick reference nei momenti bui. Basato sui miei appunti del corso di *Programmazione ad Oggetti* del PoliTo.
 
 ---
 
