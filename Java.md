@@ -686,6 +686,59 @@ Se ci sono più gestori che possono gestire una eccezione (nel caso di eccezioni
 
 ## Stream
 
+Uno stream è una sequenza di elementi provenienti da una sorgente che supportano operazione di manipolazione dei dati. Ha come caratteristiche la "concatenabilità" (pipelining), il fatto che le iterazioni avvengano internamente (non è necessario esplicitare i cicli) e la *lazy eveluation* (non avviene elaborazione fintanto che l'operazione finale non sia invocata).
+
+```java
+Stream.of("Hello","World","how","are","you","today?").sorted().limit(3).forEach(System.out::println);
+// L'output sarà:
+/*
+Hello
+World
+are
+*/
+```
+
+### Sorgente dello stream
+
+La sorgente di uno stream può essere un array, uno "Stream of", una collection. Questi possono essere prodotti attraverso i metodi `static Arrays.stream`, `default Collection.stream`, `static Stream.of`.
+
+In alternativa è possibile generarlo con i metodi `generate()` o `iterate()`.
+
+- `generate()` ha come argomento un `Supplier<T>`: gli elementi sono generati invocando il metodo `get()` del supplier (e.g. `Stream.generate(() -> Math.random()*10);`)
+- `iterate()` ha come argomenti un `seed` e un `UnaryOperator<T>`: si inizia dal seed e si computa il nuovo elemento applicando l'operatore all'elemento precedente (e.g. `Stream.iterate(0, (prev) -> prev + 2)`)
+
+N.B. I metodi di cui sopra generano stream infiniti.
+
+### Operazioni intermedie su uno stream
+
+Le operazioni intermedie classiche sono date dai metodi `filter`, `limit`, `skip`, `sorted`, `distinct`, `map`.
+
+- `default Stream<T> filter(Predicate<T>)`: accetta come predicato un reference ad un metodo booleano o una lambda
+- `default Stream<R> map(Function<T,R> mapper)`: associa ad ogni elemento dello stream una chiave secondo la funzione mapper; sono disponibili alternative per i tipi primitivi più comuni come ad esempio `mapToInt`, `mapToLong`, `mapToDouble`
+- `<R> Stream<R> flatMap(Function<T, Stream<R>> mapper)`: estrae uno stream da ogni elemento dello stream e concatena insieme i risultati di ogni stream
+
+### Operazioni finali su uno stream
+
+Le operazioni finali in genere sono:
+
+- `anyMatch()`: valuta se c'è un elemento dello stream che fa match con il predicato
+- `allMatch()`: valuta se ogni elemento dello stream fa match con il predicato
+- `noneMatch()`: valuta se nessun elemento dello stream fa match con il predicato
+- `findFirst()`: restituisce il primo elemento come `Optional<T>`
+- `min()` e `max()`: restituiscono l'emento minimo o massimo come `Optional<T>` in funzione del comparatore passato come argomento
+- `count()`: restituisce il numero di elementi in uno stream
+- `forEach()`: consuma ogni elemneto applicando una lambda a ciascuno di essi
+
+### `Optional`
+
+Un `Optional` è un valore potenziale ed è utilizzato nel caso in cui non sia possibile rappresentare niente. Per cui rende disponibili metodi per valutarne l'esistenza o definirne condizioni nel caso in cui sia presente (`ifPresent()`), per ottenerlo o in alternativa generare una eccezione se assente ecc.
+
+Per generare un `Optional` si possono usare i metodi statici `of`, `ofNullable` o `empty`.
+
+### Operazioni sugli stream
+
+p.12
+
 ## Input/Output
 
 ## Threads
